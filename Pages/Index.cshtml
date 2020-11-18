@@ -1,0 +1,73 @@
+﻿@page
+@model IndexModel
+@{
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <p>
+        <table>
+            <thead>
+                <tr>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var m in Model.ThList)
+                {
+                    <tr>
+                        <td>
+                            @(m.Name)
+                        </td>
+                        <td>
+                            <form method="post">
+                                @Html.HiddenFor(_ => m.Id)
+                                <button asp-page-handler="Invoke">Invoke</button>
+                                @if (Model.ThrottlingId == m.Id && Model.IsThrottled)
+                                {
+                                    <span class="text-danger">
+                                        @(Model.ThrottledException.Message)
+                                    </span>
+                                }
+                            </form>
+                        </td>
+                        <td>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>FACT</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>BURST</th>
+                                        <td>@(m.Burst)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Recovery</th>
+                                        <td>@(m.RsCount) / @(m.RsWait)</td>
+                                    </tr>
+                                    @if (m.HasHRestrict)
+                                    {
+                                        <tr>
+                                            <th>* Hourly</th>
+                                            <td>@(m.Hourly)</td>
+                                        </tr>
+                                        <tr>
+                                            <th>* Reset On</th>
+                                            <td>@(m.ResetOn == null ? "--" : m.ResetOn.Value.ToShortTimeString())</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </p>
+</div>
